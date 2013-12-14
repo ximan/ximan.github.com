@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>测试屏幕颜色</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<style>
+	*:not(input){margin:0;padding:0;}
+	#bg_color{position: absolute;left: 0;top: 0;width: 100%;height: 100%;background-color: white;}
+	</style>
+</head>
+<body>
+<div id="bg_color"></div>
+<script>
+	var colors = ["red","blue","green","yellow","white","black"];
+	var num = 0;
+	window.onload = function(){
+		document.querySelector("#bg_color").onclick = function(){
+			if(num < colors.length){
+				this.style.backgroundColor = colors[num];
+				num++;
+			}else{
+				num = 0;
+				this.style.backgroundColor = colors[num];
+				num++;
+			}
+		}
+	}
+</script>
+</body>
+</html>
