@@ -1,32 +1,50 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-	<meta charset="UTF-8">
-	<title>测试屏幕颜色</title>
-	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<style>
-	*:not(input){margin:0;padding:0;}
-	#bg_color{position: absolute;left: 0;top: 0;width: 100%;height: 100%;background-color: white;}
-	</style>
+    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimal-ui" charset="UTF-8">
+	<title>测试屏幕是否有坏点</title>
+<style>
+*{
+	margin:0;
+	padding:0;
+}
+#bg_color{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+}
+h1{
+	position: absolute;
+	left: 0;
+	top: 40%;
+	width: 100%;
+	line-height: 50px;
+	font-size: 32px;
+	color: #f00;
+	text-shadow:0 0 10px #000;
+	text-align: center;
+}
+</style>
 </head>
 <body>
-<div id="bg_color"></div>
+<div id="bg_color">
+	<h1>轻触屏幕，测试屏幕是否有坏点</h1>
+</div>
 <script>
-	var colors = ["red","blue","green","yellow","white","black"];
+	var colors = ["red","blue","green","yellow","purple","white","black"];
 	var num = 0;
 	window.onload = function(){
 		document.querySelector("#bg_color").onclick = function(){
-			if(num < colors.length){
-				this.style.backgroundColor = colors[num];
-				num++;
-			}else{
+			if(num >= colors.length){
 				num = 0;
-				this.style.backgroundColor = colors[num];
-				num++;
 			}
-		}
+			this.style.backgroundColor = colors[num];
+			document.querySelector('h1').innerHTML = colors[num];
+			num++;
+		};
 	}
 </script>
 </body>
