@@ -72,20 +72,15 @@ $(function(){
                 ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
 
                 // 获取图片底部一横条的图片像素
-                //var colorData = ctx.getImageData(0,0,imgWidth,1).data; // 获取头部
                 var colorData = ctx.getImageData(0,imgHeight-1,imgWidth,1).data;
                 var colorArr = [];
                 for (var i=0; i<colorData.length; i+=4){
-                    var color = colorData[i]+','+colorData[i+1]+','+colorData[i+2]+','+colorData[i+3];
+                    var color = colorData[i]+','+colorData[i+1]+','+colorData[i+2];
                     colorArr.push(color);
                 }
-                $('.bg').css('background-color', 'rgba('+mostColor(colorArr)+')');
-
-                
-                // console.log(colorArr);
-                // console.log(ctx.getImageData(0,imgHeight-1,1,1));
-
-                // $('.bg').css('background-color','rgba('+colorArr[0]+','+colorArr[1]+','+colorArr[2]+','+colorArr[3]+')');
+                var color = mostColor(colorArr);
+                $('.bg').css('background-color', 'rgb('+color+')');
+                setColor(color);
             };
         }
 
@@ -115,12 +110,17 @@ $(function(){
     }
 
     $('#canvas').on('click',function(e){
-        console.log(e.offsetX,e.offsetY);
         var canvas = document.getElementById("canvas");
         var ctx = canvas.getContext("2d");
         var colorData = ctx.getImageData(e.offsetX,e.offsetY,1,1).data;
-        $('.bg').css('background-color','rgba('+colorData[0]+','+colorData[1]+','+colorData[2]+','+colorData[3]+')');
+        var color = colorData[0]+','+colorData[1]+','+colorData[2];
+        $('.bg').css('background-color','rgb('+color+')');
+        setColor(color);
     })
+
+    function setColor(color){
+        $('#val').val('rgb('+color+')');
+    }
     
 });
 </script>
