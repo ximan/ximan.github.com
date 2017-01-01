@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1, user-scalable=0" charset="UTF-8">
+    <title></title>
+<style type="text/css">
+#canvas{
+    width: 300px;
+    height: 300px;
+    vertical-align: top;
+    cursor: crosshair;
+}
+.bg{
+    padding: 50px 10px;
+}
+</style>
+</head>
+<body>
+<h3>上传图片，默认获取图片底部一条出现颜色最多的颜色，也可以点击图片，选取对应的颜色</h3>
+<p>
+    上传图片
+    <input type="file" accept="image/*" id="file">
+</p>
+<div class="bg">
+    预览图片
+    <canvas id="canvas"></canvas>
+</div>
+<p>
+    颜色值
+    <input type="text" id="val">
+</p>
+
+<script src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
+<script>
+$(function(){
+    $('#file').on('change',function(){
+        var $this = $(this);
+        // 获取上传文件信息集合
+        var fileInfo = this.files[0];
+
+        // 判断是否为图片格式
+        if(fileInfo === undefined){
+            return;
+        }else{
+            if(fileInfo.type.indexOf('image') == -1){
+                alert('请选择图片');
+                return;
+            }
+        }
+
+        // 获取图片暂存路径
+        var url = (window.webkitURL ? webkitURL : window.URL).createObjectURL(fileInfo);
+        if(url){
+            // 创建一个图片
+            var img = new Image();
+            // 把获取的图片路径赋值给他
+            img.src = url;
+            // 这个图片加载后
+            img.onload = function(){
+                var imgWidth = img.width;
+                var imgHeight = img.height;
+
+                var canvas = document.getElementById("canvas");
+                canvas.width = imgWidth;
+                canvas.height = imgHeight;
+                $('#canvas').css({
+                    'width': imgWidth,
+                    'height': imgHeight
+                });
+
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
+
+                // 获取图片底部一横条的图片像素
+                //var colorData = ctx.getImageData(0,0,imgWidth,1).data; // 获取头部
+                var colorData = ctx.getImageData(0,imgHeight-1,imgWidth,1).data;
+                var colorArr = [];
+                for (var i=0; i<colorData.length; i+=4){
+                    var color = colorData[i]+','+colorData[i+1]+','+colorData[i+2]+','+colorData[i+3];
+                    colorArr.push(color);
+                }
+                $('.bg').css('background-color', 'rgba('+mostColor(colorArr)+')');
+
+                
+                // console.log(colorArr);
+                // console.log(ctx.getImageData(0,imgHeight-1,1,1));
+
+                // $('.bg').css('background-color','rgba('+colorArr[0]+','+colorArr[1]+','+colorArr[2]+','+colorArr[3]+')');
+            };
+        }
+
+    });
+    
+    // 获取最多的一个颜色值
+    function mostColor(arr){
+        var obj = {};
+        var text;
+        var count = 0;
+        for(var i=0; i<arr.length; i++){
+            var item = arr[i];
+            // 如果对象没有这个值，就等于1，如果有，就加1
+            if(!obj[item]){
+                obj[item] = 1;
+            }else{
+                obj[item]++;
+            }
+
+            // 逐个对比，对比出最大的一个
+            if(obj[item] > count){
+                text = item;
+                count = obj[item];
+            }
+        }
+        return text;
+    }
+
+    $('#canvas').on('click',function(e){
+        console.log(e.offsetX,e.offsetY);
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var colorData = ctx.getImageData(e.offsetX,e.offsetY,1,1).data;
+        $('.bg').css('background-color','rgba('+colorData[0]+','+colorData[1]+','+colorData[2]+','+colorData[3]+')');
+    })
+    
+});
+</script>
+</body>
+</html>
